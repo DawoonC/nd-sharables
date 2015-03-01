@@ -1,0 +1,103 @@
+{% extends "base_template.html" %}
+{% block content %}
+
+  <h1 class="my-page-header">Share Your Project!</h1>
+
+  <form action="{{url_for('new_project')}}" method="post">
+    <div class="form-group">
+      <label for="project_name">Project Name</label>
+      <input type="text" class="form-control" maxlength="80" minlength="3" id="project_name" name="project_name" placeholder="Enter your project name" required>
+    </div>
+
+    <div class="form-group">
+      <label>Nanodegree</label>
+      <div class="radio">
+        <label>
+          <input type="radio" name="nd_category" id="optionsRadios1" value="FEND" checked>
+          FEND
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="nd_category" id="optionsRadios2" value="DAND">
+          DAND
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="nd_category" id="optionsRadios3" value="FSND">
+          FSND
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="nd_category" id="optionsRadios4" value="iOSND">
+          iOSND
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="nd_category" id="optionsRadios10" value="Other">
+          Other
+        </label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Project Number</label>
+      <div class="radio">
+        <label>
+          <input type="radio" name="p_category" id="optionsRadios5" value="p1" checked>
+          Project 1
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="p_category" id="optionsRadios6" value="p2">
+          Project 2
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="p_category" id="optionsRadios7" value="p3">
+          Project 3
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="p_category" id="optionsRadios8" value="p4">
+          Project 4
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="p_category" id="optionsRadios9" value="p5">
+          Project 5
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="p_category" id="optionsRadios11" value="Other">
+          Other
+        </label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="project_name">Project URL</label>
+      <input type="url" class="form-control" maxlength="200" minlength="5" id="project_url" name="project_url" placeholder="Enter full URL to your project demo or GitHub repository" required>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea class="form-control" name="description" rows="5" placeholder="Describe your project" maxlength="500"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-default new-project-submit">Share!</button>
+  </form>
+
+  <script type="text/javascript">
+    $('.mobile-btn').toggleClass('inactive');
+  </script>
+
+{% endblock %}

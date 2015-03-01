@@ -1,0 +1,39 @@
+{% extends "base_template.html" %}
+{% block content %}
+
+  <section class="row">
+    <div class="col-xs-4">
+      <img src="{{user.avatar_url}}" class="img-responsive profile-img profile-img-detail">
+    </div>
+    <div class="col-xs-8">
+      <h3>{{user.fullname}} ({{user.username}})</h3>
+      <h5><a href="{{user.github_url}}" class="author-link">{{user.github_url}}</a></h5>
+      <h5><a href="mailto:{{user.email}}" class="author-link">{{user.email}}</a></h5>
+    </div>
+  </section>
+
+  <section class="row latest-projects user-projects">
+    <div class="col-xs-12">
+      {% if items %}
+        {% for e in items %}
+          <div class="row project-item">
+            <a href="{{url_for('project_item', nd=e.nd_category, project_no=e.p_category, project_id=e.id)}}" class="col-xs-3 project-img-box">
+              <img src="{{e.thumbnail}}" class="img-responsive project-img">
+            </a>
+            <div class="col-xs-9 project-info">
+              <h2 class="project-title">
+                <a href="{{url_for('project_item', nd=e.nd_category, project_no=e.p_category, project_id=e.id)}}">
+                  {{e.name}}
+                </a>
+              </h2>
+              <h4>{{e.nd_category}} / {{e.p_category}}</h4>
+              <h4>by <a href="{{url_for('user_profile', username=user.username)}}" class="author-link">{{user.username}}</a></h4>
+              <h5 class="created-time">{{get_time(e.created)}}</h5>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </section>
+
+{% endblock %}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"> <!-- use utf-8 for display -->
+    <meta http-equiv="X-UA-Comatible" content="IE=edge"> <!-- make IE use best engine -->
+    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- for mobile view -->
+    <title>ND Sharables</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  </head>
+  
+  <body>
+    <main class="container-fluid">
+
+      <!-- header -->
+      <header class="row">
+        <div class="col-xs-2 app-menu-icon">
+          <img src="{{url_for('static', filename='images/ic_menu_black_48dp.png')}}" alt="menu-icon" id="menu-bt">
+        </div>
+        <div class="col-xs-10 col-sm-9 app-title">
+          <h1><a href="/">ND Sharables</a></h1>
+        </div>
+        <div class="col-sm-3 new-project-btn-box">
+          {% if g.user %}
+            <a href="{{url_for('new_project')}}">
+              <button class="btn-lg btn-primary new-project-btn">
+                <span class="ic fa fa-pencil fa-lg"></span> Share
+              </button>
+            </a>
+          {% endif %}
+        </div>
+      </header>
+
+      <section class="row main-area">
+
+        <!-- nav bar/drawer -->
+        <nav class="col-xs-12 col-sm-4 col-md-3" id="drawer">
+
+          <section class="row small-profile">
+            {% if g.user %}
+              <a href="{{url_for('user_profile', username=g.user.username)}}" class="profile-box col-xs-12">
+                <img src="{{g.user.avatar_url}}" class="img-responsive profile-img">
+                <h2 class="user-greeting">Hi! {{g.user.username}}</h2>
+                <h4>View Profile</h4>
+              </a>
+              <div class="col-xs-12 signout-box">
+                <a href="{{url_for('signout')}}" class="btn-lg btn-primary">Signout</a>
+              </div>
+            {% else %}
+              <div class="signin-box">
+                <a href="{{url_for('signin')}}"><button class="btn-lg btn-primary signin-btn"><span class="ic fa fa-github fa-lg"></span> Signin with GitHub</button></a>
+              </div>
+            {% endif %}
+          </section>
+
+          <section class="row nav-bar">
+            <div class="nd-category col-xs-12"><a href="{{url_for('nd_category', nd='FEND')}}">FEND</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='FEND', project_no='p1')}}">Project 1</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='FEND', project_no='p2')}}">Project 2</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='FEND', project_no='p3')}}">Project 3</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='FEND', project_no='p4')}}">Project 4</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='FEND', project_no='p5')}}">Project 5</a></div>
+            <div class="nd-category col-xs-12"><a href="{{url_for('nd_category', nd='DAND')}}">DAND</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='DAND', project_no='p1')}}">Project 1</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='DAND', project_no='p2')}}">Project 2</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='DAND', project_no='p3')}}">Project 3</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='DAND', project_no='p4')}}">Project 4</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='DAND', project_no='p5')}}">Project 5</a></div>
+            <div class="nd-category col-xs-12"><a href="{{url_for('nd_category', nd='FSND')}}">FSND</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='FSND', project_no='p1')}}">Project 1</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='FSND', project_no='p2')}}">Project 2</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='FSND', project_no='p3')}}">Project 3</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='FSND', project_no='p4')}}">Project 4</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='FSND', project_no='p5')}}">Project 5</a></div>
+            <div class="nd-category col-xs-12"><a href="{{url_for('nd_category', nd='iOSND')}}">iOSND</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='iOSND', project_no='p1')}}">Project 1</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='iOSND', project_no='p2')}}">Project 2</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='iOSND', project_no='p3')}}">Project 3</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='iOSND', project_no='p4')}}">Project 4</a></div>
+              <div class="p-category col-xs-12"><a href="{{url_for('project_category', nd='iOSND', project_no='p5')}}">Project 5</a></div>
+            <div class="nd-category col-xs-12 last-category-item"><a href="{{url_for('nd_category', nd='Other')}}">Other</a></div>
+          </section>
+        </nav>
+
+        <!-- overlay area on mobile screen -->
+        <section class="overlay inactive"></section>
+
+        <!-- new project button for mobile screen -->
+        {% if g.user %}
+          <a href="{{url_for('new_project')}}" class="mobile-btn">
+            <button class="btn-lg btn-primary new-project-btn-mob">
+              <span class="ic fa fa-pencil fa-2x"></span>
+            </button>
+          </a>
+        {% endif %}
+
+        <section class="col-xs-12 col-sm-8 col-md-9 content-block">
+          <!-- flash message area -->
+          <div class="row flash">
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for msg in messages %}
+                  <div class="col-xs-12 alert alert-info">{{msg}}</div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+          </div>
+
+          <!-- content block -->
+          {% block content %}
+          {% endblock %}
+        </section>
+
+      </section>
+
+      <!-- footer -->
+      <footer class="row text-center contact-row">
+        <div class="col-md-12">
+          <a class="ic fa fa-github fa-2x contact-ic" href="https://github.com/DawoonC" title="GitHub" target="_blank"></a>
+          <a class="ic fa fa-linkedin fa-2x contact-ic" href="https://www.linkedin.com/in/dawoon" title="Linkedin" target="_blank"></a>
+          <a class="ic fa fa-twitter fa-2x contact-ic" href="https://twitter.com/saffron333" title="Twitter" target="_blank"></a>
+          <a class="ic fa fa-envelope fa-2x contact-ic" href="mailto:cdw_3@naver.com" title="cdw_3@naver.com" target="_blank"></a>
+        </footer>
+      </div>
+
+    </main>
+
+    <!-- JavaScript code for nav drawer -->
+    <script type="text/javascript">
+      var foo = '{{g.user.username}}';
+      // Menu button
+      var menu = document.getElementById('menu-bt');
+      // Off canvas area
+      var drawer = document.getElementById('drawer');
+      // Overlay section
+      var overlay = document.getElementsByClassName('overlay')[0];
+      // add event listener to the menu button
+      // drawer will be opened when clicked
+      menu.addEventListener('click', function(e) {
+        drawer.classList.toggle('open');
+        overlay.classList.toggle('inactive');
+        e.stopPropagation();
+      });
+      // add event listener to the overlay section
+      // drawer will be closed when clicked
+      overlay.addEventListener('click', function(e) {
+        if (drawer.classList.contains('open')) {
+          drawer.classList.toggle('open');
+          overlay.classList.toggle('inactive');
+        }
+        e.stopPropagation();
+      });
+    </script>
+
+  </body>
+</html>

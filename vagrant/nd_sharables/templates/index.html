@@ -1,0 +1,53 @@
+{% extends "base_template.html" %}
+{% block content %}
+
+  <section class="row welcome-area">
+    <div class="col-xs-12">
+      <h1 class="welcome-msg">Share Your Nanodegree</h1>
+      <h1 class="welcome-msg">Projects with Others :)</h1>
+      {% if g.user %}
+        <a href="{{url_for('new_project')}}"><button class="btn-lg btn-primary welcome-btn"><span class="ic fa fa-pencil fa-lg"></span> Share</button></a>
+      {% else %}
+        <a href="{{url_for('signin')}}"><button class="btn-lg btn-primary welcome-btn"><span class="ic fa fa-github fa-lg"></span> Signin with GitHub</button></a>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="row latest-projects">
+    <div class="col-xs-12 projects-container"></div>
+  </section>
+
+  <script type="text/javascript">
+    (function() {
+      var cursor = 0;
+      var baseUrl = "http://localhost:5000/api/v1/projects?";
+      var container = $('.projects-container');
+      var more;
+
+      $.getJSON(baseUrl+'cursor='+cursor, function(data) {
+        projects = data.Projects;
+        projects.forEach(function(elem) {
+          container.append(elem);
+        });
+        cursor = data.Cursor;
+        more = data.More;
+      });
+
+      $(window).scroll(function() {
+        if ($(window).scrollTop() === ($(document).height() - $(window).height())) {
+          if (more === true) {
+            $.getJSON(baseUrl+'cursor='+cursor, function(data) {
+              projects = data.Projects;
+              projects.forEach(function(elem) {
+                container.append(elem);
+              });
+              cursor = data.Cursor;
+              more = data.More;
+            });
+          }
+        }
+      });
+    })();
+  </script>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+# This requirements file lists all third-party dependencies for this project.
+#
+# Run 'sudo pip install -r requirements.txt' to install these dependencies
+Flask==0.10.1
+Jinja2==2.7.2
+MarkupSafe==0.18
+SQLAlchemy==0.8.4
+Werkzeug==0.9.4
+itsdangerous==0.22
+requests==2.2.1
+GitHub-Flask==2.0.1
+cloudinary==1.0.21

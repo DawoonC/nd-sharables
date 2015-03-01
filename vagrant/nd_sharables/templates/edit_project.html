@@ -1,0 +1,30 @@
+{% extends "base_template.html" %}
+{% block content %}
+
+  <h1 class="my-page-header">Edit Your Project!</h1>
+
+  <form action="{{url_for('edit_project', nd=item.nd_category, project_no=item.p_category, project_id=item.id)}}" method="post">
+    <div class="form-group">
+      <label for="project_name">Project Name</label>
+      <input type="text" class="form-control" maxlength="80" minlength="3" id="project_name" name="project_name" placeholder="Enter your project name" value="{{item.name}}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="project_name">Project URL</label>
+      <input type="url" class="form-control" maxlength="200" minlength="5" id="project_url" name="project_url" value="{{item.url}}" placeholder="Enter full URL to your project demo or GitHub repository" required>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea class="form-control" name="description" rows="5" placeholder="Describe your project" maxlength="500">{{item.description}}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-default new-project-submit">Edit!</button>
+    <a href="{{url_for('project_item', nd=item.nd_category, project_no=item.p_category, project_id=item.id)}}" class="btn btn-default new-project-submit">Cancel</a>
+  </form>
+
+  <script type="text/javascript">
+    $('.mobile-btn').toggleClass('inactive');
+  </script>
+
+{% endblock %}

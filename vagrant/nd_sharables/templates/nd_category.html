@@ -1,0 +1,44 @@
+{% extends "base_template.html" %}
+{% block content %}
+
+  <h1 class="my-page-header">{{formal_name}}</h1>
+
+  <section class="row latest-projects">
+    <div class="col-xs-12 projects-container"></div>
+  </section>
+
+  <script type="text/javascript">
+    (function() {
+      var nd = '{{nd}}';
+      var cursor = 0;
+      var baseUrl = "http://localhost:5000/api/v1/projects?nd="+nd;
+      var container = $('.projects-container');
+      var more;
+
+      $.getJSON(baseUrl+'&cursor='+cursor, function(data) {
+        projects = data.Projects;
+        projects.forEach(function(elem) {
+          container.append(elem);
+        });
+        cursor = data.Cursor;
+        more = data.More;
+      });
+
+      $(window).scroll(function() {
+        if ($(window).scrollTop() === ($(document).height() - $(window).height())) {
+          if (more) {
+            $.getJSON(baseUrl+'&cursor='+cursor, function(data) {
+              projects = data.Projects;
+              projects.forEach(function(elem) {
+                container.append(elem);
+              });
+              cursor = data.Cursor;
+              more = data.More;
+            });
+          }
+        }
+      });  
+    })();
+  </script>
+
+{% endblock %}
