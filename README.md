@@ -18,6 +18,7 @@ This project, the third in [Udacity’s Full Stack Web Developer Nanodegree](htt
 - Jinja2
 - SQLAlchemy
 - Cloudinary
+
 <br>
 ## How to Run
 
