@@ -24,7 +24,7 @@ def get_db_session():
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True)
+    _id = Column(Integer, primary_key=True)
     username = Column(String(80))
     fullname = Column(String(80))
     email = Column(String(80))
@@ -39,7 +39,7 @@ class User(Base):
 class Project(Base):
     __tablename__ = "projects"
 
-    id = Column(Integer, primary_key=True)
+    _id = Column(Integer, primary_key=True)
     name = Column(String(80), nullable=False)
     url = Column(String(200), nullable=False)
     created = Column(DATETIME, default=func.current_timestamp())
@@ -47,7 +47,7 @@ class Project(Base):
     nd_category = Column(String(80), nullable=False)
     p_category = Column(String(8), nullable=False)
     description = Column(String(200))
-    author = Column(Integer, ForeignKey('users.id'))
+    author = Column(Integer, ForeignKey('users._id'))
     user = relationship(User)
 
     @property
@@ -56,7 +56,7 @@ class Project(Base):
         return {
             "name": self.name,
             "project_url": self.url,
-            "project_id": self.id,
+            "project_id": self._id,
             "created": self.created,
             "thumbnail_url": self.thumbnail,
             "nd_category": self.nd_category,
@@ -69,10 +69,10 @@ class Project(Base):
 class Comment(Base):
     __tablename__ = "comments"
 
-    id = Column(Integer, primary_key=True)
+    _id = Column(Integer, primary_key=True)
     content = Column(String(500), nullable=False)
     created = Column(DATETIME, default=func.current_timestamp())
-    author = Column(Integer, ForeignKey('users.id'))
-    project_id = Column(Integer, ForeignKey('projects.id'))
+    author = Column(Integer, ForeignKey('users._id'))
+    project_id = Column(Integer, ForeignKey('projects._id'))
     user = relationship(User)
     project = relationship(Project)

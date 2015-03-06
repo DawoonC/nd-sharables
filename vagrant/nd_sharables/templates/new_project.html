@@ -4,6 +4,7 @@
   <h1 class="my-page-header">Share Your Project!</h1>
 
   <form action="{{url_for('new_project')}}" method="post">
+    <input type="hidden" name="_csrf_token" value="{{csrf_token()}}">
     <div class="form-group">
       <label for="project_name">Project Name</label>
       <input type="text" class="form-control" maxlength="80" minlength="3" id="project_name" name="project_name" placeholder="Enter your project name" required>

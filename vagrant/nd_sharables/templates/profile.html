@@ -17,12 +17,12 @@
       {% if items %}
         {% for e in items %}
           <div class="row project-item">
-            <a href="{{url_for('project_item', nd=e.nd_category, project_no=e.p_category, project_id=e.id)}}" class="col-xs-3 project-img-box">
+            <a href="{{url_for('project_item', nd=e.nd_category, project_no=e.p_category, project_id=e._id)}}" class="col-xs-3 project-img-box">
               <img src="{{e.thumbnail}}" class="img-responsive project-img">
             </a>
             <div class="col-xs-9 project-info">
               <h2 class="project-title">
-                <a href="{{url_for('project_item', nd=e.nd_category, project_no=e.p_category, project_id=e.id)}}">
+                <a href="{{url_for('project_item', nd=e.nd_category, project_no=e.p_category, project_id=e._id)}}">
                   {{e.name}}
                 </a>
               </h2>

@@ -16,9 +16,9 @@ def get_user_from_username(username):
     return session.query(User).filter_by(username=username).first()
 
 
-def get_user_from_user_id(id):
+def get_user_from_user_id(user_id):
     """Get user object from given user ID."""
-    return session.query(User).filter_by(id=id).first()
+    return session.query(User).filter_by(_id=user_id).first()
 
 
 def get_user_from_users_github(url):
@@ -48,7 +48,10 @@ def get_p_category_items(nd, project_no):
 
 def get_specific_project(project_id):
     """Get specific project for given project ID."""
-    return session.query(Project).filter_by(id=project_id).one()
+    item = session.query(Project).filter_by(_id=project_id)
+    if len(item.all()) == 0:
+        return None
+    return item.one()
 
 
 def get_project_items_with_cursor(cursor, nd=None, project_no=None):
@@ -95,7 +98,7 @@ def add_new_project(form, user_id):
 def update_project(project_id, form):
     """Update an existing project in DB."""
     url_edited = False
-    project = session.query(Project).filter_by(id=project_id).one()
+    project = session.query(Project).filter_by(_id=project_id).one()
 
     # update each fields
     project.name = form["project_name"]
@@ -112,7 +115,7 @@ def update_project(project_id, form):
 
 def remove_project(project_id):
     """Remove the project from DB."""
-    project = session.query(Project).filter_by(id=project_id).one()
+    project = session.query(Project).filter_by(_id=project_id).one()
     session.delete(project)
     session.commit()
 
@@ -132,11 +135,15 @@ def get_comments(project_id):
     return session.query(Comment).filter_by(project_id=project_id).order_by(Comment.created).all()
 
 
-def remove_comment(cmt_id):
+def remove_comment(cmt_id, user_id):
     """Remove the comment from DB."""
-    comment = session.query(Comment).filter_by(id=cmt_id).one()
-    session.delete(comment)
-    session.commit()
+    comment = session.query(Comment).filter_by(_id=cmt_id).one()
+    if comment.author == user_id:
+        session.delete(comment)
+        session.commit()
+        return True
+    else:
+        return False
 
 
 def get_comment_count(project_id):

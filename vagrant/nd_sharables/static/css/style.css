@@ -1,3 +1,8 @@
+@media (max-width: 350px) {
+  .app-title h1 a {
+    font-size: 31px;
+  }
+}
 @media (max-width: 450px) {
   section.welcome-area {
     height: 250px;

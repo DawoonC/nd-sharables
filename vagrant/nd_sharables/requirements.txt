@@ -10,3 +10,4 @@ itsdangerous==0.22
 requests==2.2.1
 GitHub-Flask==2.0.1
 cloudinary==1.0.21
+Flask-SeaSurf==0.2.0

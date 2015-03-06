@@ -1,10 +1,14 @@
 from flask import Flask, render_template, url_for, request, redirect, flash, jsonify, g, session, abort
 from flask.ext.github import GitHub
+from flask.ext.seasurf import SeaSurf
 from database_setup import User, init_db, get_db_session
 import db_helper
 
 app = Flask(__name__)
 app.config.from_object(__name__)
+
+# SeaSurf is a python library for CSRF protection
+csrf = SeaSurf(app)
 
 # Register this application at https://github.com/settings/applications/new
 #
@@ -102,7 +106,7 @@ def authorized(access_token):
         user.github_access_token = access_token
         db_session.commit()
 
-    session['user_id'] = user.id
+    session['user_id'] = user._id
     return redirect(next_url)
 
 
@@ -116,7 +120,7 @@ def index():
 def user_profile(username):
     """Handler function for user's profile page."""
     user = db_helper.get_user_from_username(username)
-    items = db_helper.get_users_project_items(user.id)
+    items = db_helper.get_users_project_items(user._id)
     return render_template('profile.html',
                            user=user,
                            items=items,
@@ -144,6 +148,9 @@ def project_category(nd, project_no):
 def project_item(nd, project_no, project_id):
     """Handler for a specific project item page."""
     item = db_helper.get_specific_project(project_id)
+    if item is None:
+        flash("Requested project does not exist!")
+        return redirect(url_for("index"))
     comments = db_helper.get_comments(project_id)
     return render_template('project_item.html',
                            item=item,
@@ -157,7 +164,7 @@ def project_item(nd, project_no, project_id):
 def new_project():
     """Handler for new project page. User can post new project here."""
     if request.method == "POST":
-        db_helper.add_new_project(request.form, g.user.id)
+        db_helper.add_new_project(request.form, g.user._id)
         flash("Your project's been successfully shared!")
         return redirect(url_for("loading_page"))
     else:
@@ -174,6 +181,13 @@ def loading_page():
 @app.route('/<nd>/<project_no>/<int:project_id>/edit/', methods=['GET', 'POST'])
 def edit_project(nd, project_no, project_id):
     """Handler for project edit page. Only the author of the project can edit."""
+    item = db_helper.get_specific_project(project_id)
+    if item is None:
+        flash("Requested project does not exist!")
+        return redirect(url_for("index"))
+    if not g.user or g.user._id != item.author:
+        flash("You can not edit other's project!")
+        return redirect(url_for("project_item", nd=nd, project_no=project_no, project_id=project_id))
     if request.method == "POST":
         url_edited = db_helper.update_project(project_id, request.form)
         flash("Your project's been successfully edited!")
@@ -182,28 +196,25 @@ def edit_project(nd, project_no, project_id):
         else:
             return redirect(url_for("project_item", nd=nd, project_no=project_no, project_id=project_id))
     else:
-        item = db_helper.get_specific_project(project_id)
-        if g.user and g.user.id == item.author:
-            return render_template("edit_project.html", item=item)
-        else:
-            flash("You can not edit other's project!")
-            return redirect(url_for("project_item", nd=nd, project_no=project_no, project_id=project_id))
+        return render_template("edit_project.html", item=item)
 
 
 @app.route('/<nd>/<project_no>/<int:project_id>/delete/', methods=['GET', 'POST'])
 def delete_project(nd, project_no, project_id):
     """Handler for project delete page. Only the author of the project can delete."""
+    item = db_helper.get_specific_project(project_id)
+    if item is None:
+        flash("Requested project does not exist!")
+        return redirect(url_for("index"))
+    if not g.user or g.user._id != item.author:
+        flash("You can not delete other's project!")
+        return redirect(url_for("project_item", nd=nd, project_no=project_no, project_id=project_id))
     if request.method == "POST":
         db_helper.remove_project(project_id)
         flash("Your project is successfully deleted!")
         return redirect(url_for("index"))
     else:
-        item = db_helper.get_specific_project(project_id)
-        if g.user and g.user.id == item.author:
-            return render_template('delete_project.html', nd=nd, project_no=project_no, project_id=project_id)
-        else:
-            flash("You can not delete other's project!")
-            return redirect(url_for("project_item", nd=nd, project_no=project_no, project_id=project_id))
+        return render_template('delete_project.html', nd=nd, project_no=project_no, project_id=project_id)
 
 
 @app.route('/<nd>.json/')
@@ -247,17 +258,20 @@ def new_comment():
     return jsonify(Comment=convert_comment_to_html(comment)), 201
 
 
-@app.route('/api/v1/comment/<int:cmt_id>', methods=['DELETE'])
+@app.route('/api/v1/comment/<int:cmt_id>', methods=['POST'])
 def delete_comment(cmt_id):
     """API for handling delete comment calls."""
-    db_helper.remove_comment(cmt_id)
-    return jsonify(Result=True)
+    result = db_helper.remove_comment(cmt_id, request.json['user'])
+    if result is True:
+        return jsonify(Result=True)
+    else:
+        abort(400)
 
 
 def convert_project_to_html(item):
     """Convert project data into HTML element for AJAX calls."""
     author = db_helper.get_user_from_user_id(item.author).username
-    project_elem = project_item_template.format(item_url=url_for('project_item', nd=item.nd_category, project_no=item.p_category, project_id=item.id),
+    project_elem = project_item_template.format(item_url=url_for('project_item', nd=item.nd_category, project_no=item.p_category, project_id=item._id),
                                                 thumbnail=item.thumbnail,
                                                 name=item.name,
                                                 nd_category=item.nd_category,
@@ -265,7 +279,7 @@ def convert_project_to_html(item):
                                                 user_url=url_for('user_profile', username=author),
                                                 author=author,
                                                 created=db_helper.get_readable_datetime(item.created),
-                                                no_of_comments=db_helper.get_comment_count(item.id))
+                                                no_of_comments=db_helper.get_comment_count(item._id))
     return project_elem
 
 
@@ -277,7 +291,7 @@ def convert_comment_to_html(comment):
                                            username=author.username,
                                            created=db_helper.get_readable_datetime(comment.created),
                                            content=comment.content,
-                                           cmt_id=comment.id)
+                                           cmt_id=comment._id)
     return comment_elem
 
 
