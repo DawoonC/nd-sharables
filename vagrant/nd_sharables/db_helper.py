@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Base, User, Project, Comment
 import cloudinary
 
-engine = create_engine('sqlite:///ndSharables.db')
+engine = create_engine('postgresql://localhost:5432/mydb')
 
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
@@ -89,7 +89,7 @@ def add_new_project(form, user_id):
                           p_category=form["p_category"],
                           description=form["description"],
                           author=user_id,)
-                          #thumbnail=get_thumbnal_url_from(form["project_url"]))
+                          # thumbnail=get_thumbnal_url_from(form["project_url"]))
     session.add(new_project)
     session.commit()
 
@@ -159,7 +159,7 @@ def get_comment_count(project_id):
 
 def get_readable_datetime(datetime):
     """Convert datetime object into readable format."""
-    current_time = datetime.now()
+    current_time = datetime.utcnow()
     diff = int((current_time - datetime).total_seconds())
     if diff < 60:
         return "%s sec ago" % diff

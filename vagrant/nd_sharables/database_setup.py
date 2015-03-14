@@ -1,9 +1,10 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DATETIME, func
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker, scoped_session
 from sqlalchemy import create_engine
+from datetime import datetime
 
-engine = create_engine('sqlite:///ndSharables.db')
+engine = create_engine('postgresql://localhost:5432/mydb')
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
@@ -42,11 +43,11 @@ class Project(Base):
     _id = Column(Integer, primary_key=True)
     name = Column(String(80), nullable=False)
     url = Column(String(200), nullable=False)
-    created = Column(DATETIME, default=func.current_timestamp())
+    created = Column(DateTime(), default=datetime.utcnow)
     thumbnail = Column(String(200), default="/static/images/dummy.png")
     nd_category = Column(String(80), nullable=False)
     p_category = Column(String(8), nullable=False)
-    description = Column(String(200))
+    description = Column(String(500))
     author = Column(Integer, ForeignKey('users._id'))
     user = relationship(User)
 
@@ -71,7 +72,7 @@ class Comment(Base):
 
     _id = Column(Integer, primary_key=True)
     content = Column(String(500), nullable=False)
-    created = Column(DATETIME, default=func.current_timestamp())
+    created = Column(DateTime(), default=func.datetime.utcnow)
     author = Column(Integer, ForeignKey('users._id'))
     project_id = Column(Integer, ForeignKey('projects._id'))
     user = relationship(User)

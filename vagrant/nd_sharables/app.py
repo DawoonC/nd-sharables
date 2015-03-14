@@ -19,6 +19,9 @@ csrf = SeaSurf(app)
 # and paste them in below.
 app.config['GITHUB_CLIENT_ID'] = 'xxxxxxxxxxxxxxxxxxxx'
 app.config['GITHUB_CLIENT_SECRET'] = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+app.config['DEBUG'] = True
+
+init_db()
 
 github = GitHub(app)
 db_session = get_db_session()
@@ -296,7 +299,4 @@ def convert_comment_to_html(comment):
 
 
 if __name__ == '__main__':
-    init_db()
-    app.secret_key = "super_secret_key"
-    app.debug = True
     app.run(host='0.0.0.0', port=5000)
